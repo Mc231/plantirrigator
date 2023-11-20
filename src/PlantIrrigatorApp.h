@@ -7,6 +7,7 @@
 #include "LittleFSImpl.h"
 #include "AbstractWiFiSetupManager.h"
 #include "IrrigatorManager.h"
+#include "PostSetupAvailabilityBroadcaster.h"
 
 class PlantIrrigatorApp {
 public:
@@ -19,6 +20,7 @@ private:
     WiFiConfigManager configManager;
     AbstractWiFiSetupManager* setupManager;
     IrrigatorManager irrigatorManager;
+    PostSetupAvailabilityBroadcaster* postSetupBroadcaster;
     bool isSetupComplete;
 
     void setupCompleted();

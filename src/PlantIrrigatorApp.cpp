@@ -1,11 +1,14 @@
 // PlantIrrigatorApp.cpp
 #include "PlantIrrigatorApp.h"
+#include "MDNSBroadcaster.h"
 
 PlantIrrigatorApp::PlantIrrigatorApp() 
     : configManager(fileSystem), 
     setupManager(new WiFiSetupManager(configManager)), 
     irrigatorManager(configManager),
-    isSetupComplete(false) {}
+    postSetupBroadcaster(new MDNSBroadcaster()),
+    isSetupComplete(false)
+     {}
 
 void PlantIrrigatorApp::setup() {
     Serial.begin(115200);
@@ -29,4 +32,5 @@ void PlantIrrigatorApp::setupCompleted() {
     Serial.println("Wi-Fi connected. Setup completed!");
     isSetupComplete = true;
     irrigatorManager.begin();
+    postSetupBroadcaster->begin();
 }
