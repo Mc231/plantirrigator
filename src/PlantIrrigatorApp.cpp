@@ -29,8 +29,4 @@ void PlantIrrigatorApp::initializeWiFi() {
 
 void PlantIrrigatorApp::setupCompleted() {
     setupManager->stopServices();
-    Serial.println("Wi-Fi connected. Setup completed!");
-    isSetupComplete = true;
-    irrigatorManager.begin();
-    postSetupBroadcaster->begin();
-}
+    Serial.println("Wi-Fi connecte

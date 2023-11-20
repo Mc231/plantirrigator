@@ -7,5 +7,4 @@ void MDNSBroadcaster::begin() {
     } else {
         Serial.println("mDNS responder started");
         MDNS.addService("http", "_irrigator._tcp.", 80);
-    }
-}
+  
