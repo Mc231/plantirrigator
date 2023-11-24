@@ -6,6 +6,7 @@ class PostSetupAvailabilityBroadcaster {
 public:
     virtual ~PostSetupAvailabilityBroadcaster() {}
     virtual void begin() = 0;
+    virtual void loop() = 0;
 };
 
 #endif

@@ -23,4 +23,9 @@ private:
     PostSetupAvailabilityBroadcaster* postSetupBroadcaster;
     bool isSetupComplete;
 
-    void setupCompleted()
+    void setupCompleted();
+    void initializeWiFi();
+    // Add other methods and members relevant to your application
+};
+
+#endif

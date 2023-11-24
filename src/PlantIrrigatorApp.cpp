@@ -20,6 +20,7 @@ void PlantIrrigatorApp::loop() {
         setupManager->handleClient();
     } else {
         irrigatorManager.handleClient();
+        postSetupBroadcaster->loop();
     }
 }
 
@@ -29,4 +30,8 @@ void PlantIrrigatorApp::initializeWiFi() {
 
 void PlantIrrigatorApp::setupCompleted() {
     setupManager->stopServices();
-    Serial.println("Wi-Fi connecte
+    Serial.println("Wi-Fi connected. Setup completed!");
+    isSetupComplete = true;
+    postSetupBroadcaster->begin();
+    irrigatorManager.begin();
+}

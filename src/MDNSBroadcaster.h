@@ -8,6 +8,7 @@
 class MDNSBroadcaster : public PostSetupAvailabilityBroadcaster {
 public:
     void begin() override;
+    void loop() override;
 };
 
 #endif
