@@ -1,14 +1,17 @@
 // PlantIrrigatorApp.cpp
 #include "PlantIrrigatorApp.h"
 #include "MDNSBroadcaster.h"
+#include "MqttManagerImpl.h"
 
 PlantIrrigatorApp::PlantIrrigatorApp() 
     : wifiConfigManager(fileSystem), 
     mqttConfigManager(fileSystem),
+    mqttManager(new MqttManagerImpl(mqttConfigManager)),
     setupManager(new WiFiSetupManager(wifiConfigManager)), 
     irrigatorManager(wifiConfigManager, mqttConfigManager),
     postSetupBroadcaster(new MDNSBroadcaster()),
-    isSetupComplete(false)
+    isSetupComplete(false),
+    hasMqttConfig(false)
      {}
 
 void PlantIrrigatorApp::setup() {
@@ -22,6 +25,9 @@ void PlantIrrigatorApp::loop() {
     } else {
         irrigatorManager.handleClient();
         postSetupBroadcaster->loop();
+        if (hasMqttConfig) {
+            mqttManager->loop();
+        }
     }
 }
 
@@ -35,4 +41,8 @@ void PlantIrrigatorApp::setupCompleted() {
     isSetupComplete = true;
     postSetupBroadcaster->begin();
     irrigatorManager.begin();
+    hasMqttConfig = mqttManager->hasConfig();
+    if (hasMqttConfig) {
+        mqttManager->connect();
+    }
 }

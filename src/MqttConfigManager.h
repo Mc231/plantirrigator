@@ -8,15 +8,17 @@ class MqttConfigManager {
 public:
     struct Config {
         String server;
+        String port;
         String username;
         String password;
+        String statusTopic;
     };
 
     MqttConfigManager(AbstractFS& fs);
 
     Config readConfig();
     void clearConfig();
-    void saveConfig(const String& server, const String& username, const String& password);
+    void saveConfig(const String& server, const String& port, const String& username, const String& password, String& statusTopic);
 
 private:
     AbstractFS& fileSystem;

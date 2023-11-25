@@ -11,7 +11,9 @@ MqttConfigManager::Config MqttConfigManager::readConfig() {
             if (configFile) {
                 config.server = trimString(configFile.readStringUntil('\n'));
                 config.username = trimString(configFile.readStringUntil('\n'));
+                config.port = trimString(configFile.readStringUntil('\n'));
                 config.password = trimString(configFile.readStringUntil('\n'));
+                config.statusTopic = trimString(configFile.readStringUntil('\n'));
                 configFile.close();
             }
         }
@@ -34,13 +36,15 @@ void MqttConfigManager::clearConfig() {
     }
 }
 
-void MqttConfigManager::saveConfig(const String& server, const String& username, const String& password) {
+void MqttConfigManager::saveConfig(const String& server, const String& port, const String& username, const String& password, String& statusTopic) {
     if (fileSystem.begin()) {
         File configFile = fileSystem.open("/mqtt_config.cfg", "w");
         if (configFile) {
             configFile.println(server);
             configFile.println(username);
             configFile.println(password);
+            configFile.println(port);
+            configFile.println(statusTopic);
             configFile.close();
         }
         fileSystem.end();

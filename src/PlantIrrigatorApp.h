@@ -9,6 +9,7 @@
 #include "AbstractWiFiSetupManager.h"
 #include "IrrigatorManager.h"
 #include "PostSetupAvailabilityBroadcaster.h"
+#include "MqttManager.h"
 
 class PlantIrrigatorApp {
 public:
@@ -20,10 +21,12 @@ private:
     LittleFSImpl fileSystem;
     WiFiConfigManager wifiConfigManager;
     MqttConfigManager mqttConfigManager;
+    MqttManager* mqttManager;
     AbstractWiFiSetupManager* setupManager;
     IrrigatorManager irrigatorManager;
     PostSetupAvailabilityBroadcaster* postSetupBroadcaster;
     bool isSetupComplete;
+    bool hasMqttConfig;
 
     void setupCompleted();
     void initializeWiFi();

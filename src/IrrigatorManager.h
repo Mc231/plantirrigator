@@ -5,6 +5,7 @@
 #include <ESP8266WebServer.h>
 #include "WiFiConfigManager.h"
 #include "MqttConfigManager.h"
+#include "MqttManager.h"
 
 class IrrigatorManager {
 public:

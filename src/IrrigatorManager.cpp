@@ -59,16 +59,20 @@ void IrrigatorManager::handleReboot() {
 void IrrigatorManager::handleGetMQTT() {
     auto config = mqttConfigManager.readConfig();
     String response = "{\"server\":\"" + config.server + 
+                      "\", \"port\":\"" + config.port + 
                       "\", \"username\":\"" + config.username + 
-                      "\", \"password\":\"" + config.password + "\"}";
+                      "\", \"password\":\"" + config.password +
+                      "\", \"status_topic\":\"" + config.statusTopic +  "\"}";
     webServer.send(200, "application/json", response);
 }
 
 void IrrigatorManager::handleSetMQTT() {
     String server = webServer.arg("server");
+    String port = webServer.arg("port");
     String username = webServer.arg("username");
     String password = webServer.arg("password");
-    mqttConfigManager.saveConfig(server, username, password);
+    String statusTopic = webServer.arg("status_topic");
+    mqttConfigManager.saveConfig(server, port, username, password, statusTopic);
     webServer.send(200, "text/plain", "MQTT Configuration updated rebooting");
     handleReboot();
 }
@@ -90,8 +94,10 @@ void IrrigatorManager::handleRoot() {
                   "<h2>MQTT Configuration</h2>"
                   "<form action='/mqtt' method='post'>"
                   "Server: <input type='text' id='mqttServer' name='server'><br>"
+                  "Port: <input type='text' id='mqttPort' name='prot'><br>"
                   "Username: <input type='text' id='mqttUsername' name='username'><br>"
                   "Password: <input type='password' id='mqttPassword' name='password'><br>"
+                  "Status Topic: <input type='text' id='mqttStatusTopic' name='status_topic'><br>"
                   "<button type='submit'>Save Changes</button>"
                  "</form>"
                   "<form action='/reboot' method='post'>"
@@ -108,8 +114,10 @@ void IrrigatorManager::handleRoot() {
                   "}).catch(error => console.error('Error:', error));"
                   "fetch('/mqtt').then(response => response.json()).then(data => {"
                   "  document.getElementById('mqttServer').value = data.server || '';"
+                  "  document.getElementById('mqttPort').value = data.port || '';"
                   "  document.getElementById('mqttUsername').value = data.username || '';"
                   "  document.getElementById('mqttPassword').value = data.password || '';"
+                  "  document.getElementById('mqttStatusTopic').value = data.status_topic || '';"
                   "}).catch(error => console.error('Error:', error));"
                   "</script>"
                   "</body></html>";
