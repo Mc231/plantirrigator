@@ -11,6 +11,7 @@
 #include "PostSetupBroadcaster/PostSetupAvailabilityBroadcaster.h"
 #include "Mqtt/MqttManager.h"
 #include "Controller/IrrigatorController.h"
+#include "Sensor/MoistureSensor.h"
 
 class PlantIrrigatorApp {
 public:
@@ -22,8 +23,9 @@ private:
     LittleFSImpl fileSystem;
     WiFiConfigManager wifiConfigManager;
     MqttConfigManager mqttConfigManager;
-    IrrigatorController irrigatorController;
     MqttManager* mqttManager;
+    MoistureSensor* moistureSensor;
+    IrrigatorController irrigatorController;
     AbstractWiFiSetupManager* setupManager;
     IrrigatorWebServer irrigatorWebServer;
     PostSetupAvailabilityBroadcaster* postSetupBroadcaster;

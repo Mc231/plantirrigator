@@ -20,6 +20,7 @@ private:
     void handleWiFiForget();
     void handleSetMQTT();
     void handleGetMQTT();
+    void handleGetMoistureLevel();
     void handleRoot();
     void handleRestore();
 };

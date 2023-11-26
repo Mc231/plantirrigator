@@ -11,6 +11,7 @@ void IrrigatorWebServer::begin() {
     webServer.on("/wifi/forget", HTTP_POST, std::bind(&IrrigatorWebServer::handleWiFiForget, this));
     webServer.on("/mqtt", HTTP_GET, std::bind(&IrrigatorWebServer::handleGetMQTT, this));
     webServer.on("/mqtt", HTTP_POST, std::bind(&IrrigatorWebServer::handleSetMQTT, this));
+    webServer.on("/moisture", HTTP_GET, std::bind(&IrrigatorWebServer::handleGetMoistureLevel, this));
     webServer.on("/reboot", HTTP_POST, std::bind(&IrrigatorWebServer::handleReboot, this));
     webServer.on("/", HTTP_GET, std::bind(&IrrigatorWebServer::handleRoot, this));
     webServer.on("/restore", HTTP_POST, std::bind(&IrrigatorWebServer::handleRestore, this));
@@ -45,6 +46,12 @@ void IrrigatorWebServer::handleReboot() {
 void IrrigatorWebServer::handleGetMQTT() {
     String response = irrigatorController.getMqttConfig();
     webServer.send(200, "application/json", response);
+}
+
+void IrrigatorWebServer::handleGetMoistureLevel() {
+    int level = irrigatorController.getMoistureLevel(10);
+    String response = "{\"moisture\":" + String(level) + "}";
+    webServer.send(200, "application/json", response); 
 }
 
 void IrrigatorWebServer::handleSetMQTT() {

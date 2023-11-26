@@ -2,12 +2,15 @@
 #include "PlantIrrigatorApp.h"
 #include "PostSetupBroadcaster/MDNSBroadcaster.h"
 #include "Mqtt/MqttManagerImpl.h"
+#include "Sensor/MoistureSensorImpl.h"
+
 
 PlantIrrigatorApp::PlantIrrigatorApp() 
     : wifiConfigManager(fileSystem), 
     mqttConfigManager(fileSystem),
     mqttManager(new MqttManagerImpl(mqttConfigManager)),
-    irrigatorController(wifiConfigManager, mqttConfigManager),
+    moistureSensor(new MoistureSensorImpl(3,2)),
+    irrigatorController(wifiConfigManager, mqttConfigManager, moistureSensor),
     setupManager(new WiFiSetupManager(wifiConfigManager)), 
     irrigatorWebServer(irrigatorController),
     postSetupBroadcaster(new MDNSBroadcaster()),
@@ -17,6 +20,7 @@ PlantIrrigatorApp::PlantIrrigatorApp()
 
 void PlantIrrigatorApp::setup() {
     Serial.begin(115200);
+    moistureSensor->begin();
     initializeWiFi();
 }
 
