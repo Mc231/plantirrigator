@@ -9,8 +9,6 @@ void MqttManagerImpl::connect() {
     if (!serverSetup && hasConfig()) {
         auto config = mqttConfigManager.readConfig();
         int port =  config.port.toInt();
-        Serial.println("Connecting to port: ");
-        Serial.print(port);
         mqttClient.setServer(config.server.c_str(), port);
         serverSetup = true;
     }

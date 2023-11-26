@@ -8,10 +8,55 @@ const char captivePortalHTML[] PROGMEM = R"rawliteral(
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ESP8266 Wi-Fi Connect</title>
+    <title>Plant Irrigator</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .container {
+            width: 60%;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            text-align: left; /* Align container content to the left */
+        }
+        button, input[type='password'] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box; /* Fixes padding and border issues */
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+            width: auto; /* Make buttons auto width */
+            padding: 5px 10px; /* Reduce button padding */
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
         .status {
-            color: black;
+            margin-top: 10px;
+            padding: 5px; /* Reduce status padding */
+            border-radius: 4px;
         }
         .connecting {
             color: blue;
@@ -22,7 +67,27 @@ const char captivePortalHTML[] PROGMEM = R"rawliteral(
         .error {
             color: red;
         }
+        .radio-group {
+            display: flex;
+            flex-direction: column; /* Align radio buttons vertically */
+        }
+        .radio-item {
+            margin-right: 10px; /* Add some space between radio buttons */
+        }
     </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Plant Irrigator WI-FI Setup</h1>
+        <div id="networkList"></div> <!-- Network list will be populated here -->
+        <button onclick="scanNetworks()">Refresh Networks</button>
+        <div>
+            Password: <input type="password" id="password">
+        </div>
+        <button onclick="connect()">Connect</button>
+        <label id="status" class="status">Status: Idle</label>
+    </div>
+
     <script>
         function scanNetworks() {
             fetch('/scan')
@@ -96,14 +161,6 @@ const char captivePortalHTML[] PROGMEM = R"rawliteral(
 
         window.onload = scanNetworks;
     </script>
-</head>
-<body>
-    <h1>ESP8266 Wi-Fi Connect</h1>
-    <div id="networkList"></div> <!-- Network list will be populated here -->
-    <button onclick="scanNetworks()">Refresh Networks</button><br><br>
-    Password: <input type="password" id="password"><br><br>
-    <button onclick="connect()">Connect</button><br><br>
-    <label id="status" class="status">Status: Idle</label>
 </body>
 </html>
 )rawliteral";
