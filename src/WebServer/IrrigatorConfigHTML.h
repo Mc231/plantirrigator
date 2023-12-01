@@ -62,11 +62,31 @@ const char irrigatorConfigHTML[] PROGMEM = R"rawliteral(
         button:hover, input[type='submit']:hover {
             background-color: #0056b3;
         }
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Irrigator App</h1>
+
+        <!-- Moisture Level Section -->
+        <h2>Moisture Level</h2>
+        <div id="moistureLevel" class="form-group"></div>
+
+        <!-- Relay Control Section -->
+        <h2>Relay Control</h2>
+        <div id="relayState" class="form-group">
+            <button onclick="toggleRelay()">Toggle Relay</button>
+            <span id="relayStatus" class="status-indicator"></span>
+        </div>
+
+
         <div id='wifiSSID' class="form-group"></div>
 
         <h2>MQTT Configuration</h2>
@@ -130,6 +150,36 @@ const char irrigatorConfigHTML[] PROGMEM = R"rawliteral(
                 alert('Error: ' + error.message);
             });
         }
+
+        function toggleRelay() {
+            fetch('/relay', {
+                method: 'POST'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    updateRelayStatus(data.state);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function updateRelayStatus(state) {
+            const statusIndicator = document.getElementById('relayStatus');
+            if (state) {
+                statusIndicator.style.backgroundColor = 'green';
+            } else {
+                statusIndicator.style.backgroundColor = 'red';
+            }
+        }
+
+        window.onload = function() {
+            fetch('/relay')
+                .then(response => response.json())
+                .then(data => {
+                    updateRelayStatus(data.state);
+                })
+                .catch(error => console.error('Error:', error));
+        };
+
     </script>
 </body>
 </html>
