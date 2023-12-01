@@ -11,6 +11,7 @@ class IrrigatorController {
 public:
     IrrigatorController(WiFiConfigManager& configManager, MqttConfigManager& mqttConfigManager, MoistureSensor* moistureSensor, RelaySensor* relaySensor);
     String getStatus();
+    String getSensorsStatus();
     String getWiFiConfig();
     String getMqttConfig();
     void setMqttConfig(const String& server, const String& port, const String& username, const String& password, String& statusTopic);

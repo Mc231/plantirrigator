@@ -23,6 +23,7 @@ private:
     void handleGetMoistureLevel();
     void handleGetRelay();
     void handleToggleRelay();
+    void handleGetSensors();
     void handleRoot();
     void handleRestore();
 };

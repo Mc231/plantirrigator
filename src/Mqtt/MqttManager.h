@@ -11,6 +11,7 @@ public:
     virtual void loop() = 0;
     virtual void publish(const char* topic, const char* payload) = 0;
     virtual bool hasConfig() = 0;
+    virtual bool isConnected() = 0;
 };
 
 #endif

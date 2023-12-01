@@ -13,6 +13,7 @@
 #include "Controller/IrrigatorController.h"
 #include "Sensor/MoistureSensor.h"
 #include "Sensor/RelaySensor.h"
+#include "StateNotifier/StateNotifier.h"
 
 class PlantIrrigatorApp {
 public:
@@ -28,6 +29,7 @@ private:
     MoistureSensor* moistureSensor;
     RelaySensor* relaySensor;
     IrrigatorController irrigatorController;
+    StateNotifier stateNotifier;
     AbstractWiFiSetupManager* setupManager;
     IrrigatorWebServer irrigatorWebServer;
     PostSetupAvailabilityBroadcaster* postSetupBroadcaster;

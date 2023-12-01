@@ -34,6 +34,19 @@ String IrrigatorController::getStatus() {
     return jsonResponse;
 }
 
+String IrrigatorController::getSensorsStatus() {
+        // Moisture
+    int moisture = moistureSensor->getMoistureLevel(10);
+    // Relay
+    bool relay = relaySensor->getCurrentState();
+      String jsonResponse = "{";
+    jsonResponse += "\"moisture\": \"" + String(moisture) + "\"";
+    jsonResponse += "\"relay\": \"" + String(relay) + "\"";
+    jsonResponse += "}";
+
+    return jsonResponse;
+}
+
 String IrrigatorController::getWiFiConfig() {
     auto config = wiFiConfigManager.readConfig();
     return "{\"ssid\":\"" + config.ssid + "\"}";

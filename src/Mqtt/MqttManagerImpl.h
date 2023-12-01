@@ -14,6 +14,7 @@ public:
     void loop() override;
     void publish(const char* topic, const char* payload) override;
     bool hasConfig() override;
+    bool isConnected() override;
     void setCallback(MQTT_CALLBACK_SIGNATURE);
 
 private:
@@ -21,8 +22,6 @@ private:
     WiFiClient wifiClient;
     PubSubClient mqttClient;
     bool serverSetup;
-
-    void reconnect();
 };
 
 #endif
