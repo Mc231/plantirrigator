@@ -52,5 +52,6 @@ void PlantIrrigatorApp::setupCompleted() {
     hasMqttConfig = mqttManager->hasConfig();
     if (hasMqttConfig) {
         mqttManager->connect();
+        stateNotifier.notifyByTimeout(5000);
     }
 }

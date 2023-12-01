@@ -13,3 +13,8 @@ void StateNotifier::notifyStatus() {
         mqttManager->publish(topic, state);
     }
 }
+
+
+void StateNotifier::notifyByTimeout(int timeout) {
+    timer.attach(timeout, [this] () { this->notifyStatus(); });
+}
