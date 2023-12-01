@@ -1,29 +1,31 @@
 // WiFiConfigManager.cpp
 #include "WiFiConfigManager.h"
 
-WiFiConfigManager::WiFiConfigManager(AbstractFS& fs) : fileSystem(fs) {
+WiFiConfigManager::WiFiConfigManager(AbstractFS& fs) : fileSystem(fs), isConfigCached(false) {
     fileSystem.begin();
 }
 
 WiFiConfigManager::Config WiFiConfigManager::readConfig() {
-    Config config;
-    if (fileSystem.exists(WIFI_CONFIG_FILE )) {
-        File configFile = fileSystem.open(WIFI_CONFIG_FILE, "r");
-        if (configFile) {
-            while(configFile.available()) {
-                String line = configFile.readStringUntil('\n');
-                line = trimString(line);
+    if (!isConfigCached) {
+        if (fileSystem.exists(WIFI_CONFIG_FILE)) {
+            File configFile = fileSystem.open(WIFI_CONFIG_FILE, "r");
+            if (configFile) {
+                while (configFile.available()) {
+                    String line = configFile.readStringUntil('\n');
+                    line = trimString(line);
 
-                if (config.ssid.length() == 0) {
-                    config.ssid = line;
-                } else if (config.password.length() == 0) {
-                    config.password = line;
-                } 
+                    if (cachedConfig.ssid.length() == 0) {
+                        cachedConfig.ssid = line;
+                    } else if (cachedConfig.password.length() == 0) {
+                        cachedConfig.password = line;
+                    }
+                }
+                configFile.close();
             }
-            configFile.close();
         }
+        isConfigCached = true; // Set the cache flag
     }
-    return config;
+    return cachedConfig;
 }
 
 void WiFiConfigManager::saveConfig(const String& ssid, const String& password) {
@@ -32,6 +34,10 @@ void WiFiConfigManager::saveConfig(const String& ssid, const String& password) {
         configFile.println(ssid);
         configFile.println(password);
         configFile.close();
+        // Update the cache
+        cachedConfig.ssid = ssid;
+        cachedConfig.password = password;
+        isConfigCached = true;
     }
 }
 
@@ -40,6 +46,7 @@ void WiFiConfigManager::clearConfig() {
         if (fileSystem.exists(WIFI_CONFIG_FILE)) {
             fileSystem.remove(WIFI_CONFIG_FILE);
             Serial.println("WI-FI config configuration cleared.");
+            isConfigCached = false; // Invalidate the cache
         } else {
             Serial.println("No WI-FI config configuration to clear.");
         }

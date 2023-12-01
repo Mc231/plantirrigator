@@ -20,6 +20,8 @@ public:
 private:
     static constexpr const char* WIFI_CONFIG_FILE = "/wi_fi_config.cfg";
     AbstractFS& fileSystem;
+    bool isConfigCached;
+    Config cachedConfig;
     String trimString(const String& str);
 };
 
