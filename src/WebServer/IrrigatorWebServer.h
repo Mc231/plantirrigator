@@ -21,6 +21,8 @@ private:
     void handleSetMQTT();
     void handleGetMQTT();
     void handleGetMoistureLevel();
+    void handleGetRelay();
+    void handleToggleRelay();
     void handleRoot();
     void handleRestore();
 };

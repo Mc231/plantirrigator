@@ -1,8 +1,8 @@
 // IrrigatorController.cpp
 #include "IrrigatorController.h"
 
-IrrigatorController::IrrigatorController(WiFiConfigManager& cm, MqttConfigManager& mm, MoistureSensor* moistureSensor)
-    : wiFiConfigManager(cm), mqttConfigManager(mm), moistureSensor(moistureSensor) {}
+IrrigatorController::IrrigatorController(WiFiConfigManager& cm, MqttConfigManager& mm, MoistureSensor* moistureSensor, RelaySensor* relaySensor)
+    : wiFiConfigManager(cm), mqttConfigManager(mm), moistureSensor(moistureSensor), relaySensor(relaySensor) {}
 
 String IrrigatorController::getStatus() {
     // Fetch Wi-Fi SSID
@@ -18,6 +18,9 @@ String IrrigatorController::getStatus() {
     // Moisture
     int moisture = moistureSensor->getMoistureLevel(10);
 
+    // Relay
+    bool relay = relaySensor->getCurrentState();
+
     // Construct JSON response
     String jsonResponse = "{";
     jsonResponse += "\"ssid\": \"" + wifiSSID + "\",";
@@ -25,6 +28,7 @@ String IrrigatorController::getStatus() {
     jsonResponse += "\"mqtt_port\": \"" + mqttPort + "\"";
     jsonResponse += "\"mqtt_status_topic\": \"" + mqttStatusTopic + "\"";
     jsonResponse += "\"moisture\": \"" + String(moisture) + "\"";
+    jsonResponse += "\"relay\": \"" + String(relay) + "\"";
     jsonResponse += "}";
 
     return jsonResponse;
@@ -64,4 +68,12 @@ void IrrigatorController::restoreConfig() {
 
 int IrrigatorController::getMoistureLevel(int delay) {
     return moistureSensor->getMoistureLevel(delay);
+}
+
+bool IrrigatorController::getRelayState() {
+    return relaySensor->getCurrentState();
+}
+
+void IrrigatorController::toggleRelay() {
+    relaySensor->toggle();
 }

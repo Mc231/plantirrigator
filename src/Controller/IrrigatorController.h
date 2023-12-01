@@ -5,10 +5,11 @@
 #include "WiFi/WiFiConfigManager.h"
 #include "Mqtt/MqttConfigManager.h"
 #include "Sensor/MoistureSensor.h"
+#include "Sensor/RelaySensor.h"
 
 class IrrigatorController {
 public:
-    IrrigatorController(WiFiConfigManager& configManager, MqttConfigManager& mqttConfigManager, MoistureSensor* moistureSensor);
+    IrrigatorController(WiFiConfigManager& configManager, MqttConfigManager& mqttConfigManager, MoistureSensor* moistureSensor, RelaySensor* relaySensor);
     String getStatus();
     String getWiFiConfig();
     String getMqttConfig();
@@ -17,11 +18,14 @@ public:
     void reboot();
     void restoreConfig();
     int getMoistureLevel(int delay);
+    bool getRelayState();
+    void toggleRelay();
 
 private:
     WiFiConfigManager& wiFiConfigManager;
     MqttConfigManager& mqttConfigManager;
     MoistureSensor* moistureSensor;
+    RelaySensor* relaySensor;
 };
 
 #endif

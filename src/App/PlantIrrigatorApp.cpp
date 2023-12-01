@@ -3,6 +3,7 @@
 #include "PostSetupBroadcaster/MDNSBroadcaster.h"
 #include "Mqtt/MqttManagerImpl.h"
 #include "Sensor/MoistureSensorImpl.h"
+#include "Sensor/RelaySensorImpl.h"
 
 
 PlantIrrigatorApp::PlantIrrigatorApp() 
@@ -10,7 +11,8 @@ PlantIrrigatorApp::PlantIrrigatorApp()
     mqttConfigManager(fileSystem),
     mqttManager(new MqttManagerImpl(mqttConfigManager)),
     moistureSensor(new MoistureSensorImpl(3,2)),
-    irrigatorController(wifiConfigManager, mqttConfigManager, moistureSensor),
+    relaySensor(new RelaySensorImpl(4)),
+    irrigatorController(wifiConfigManager, mqttConfigManager, moistureSensor, relaySensor),
     setupManager(new WiFiSetupManager(wifiConfigManager)), 
     irrigatorWebServer(irrigatorController),
     postSetupBroadcaster(new MDNSBroadcaster()),

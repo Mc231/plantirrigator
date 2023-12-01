@@ -12,6 +12,7 @@
 #include "Mqtt/MqttManager.h"
 #include "Controller/IrrigatorController.h"
 #include "Sensor/MoistureSensor.h"
+#include "Sensor/RelaySensor.h"
 
 class PlantIrrigatorApp {
 public:
@@ -25,6 +26,7 @@ private:
     MqttConfigManager mqttConfigManager;
     MqttManager* mqttManager;
     MoistureSensor* moistureSensor;
+    RelaySensor* relaySensor;
     IrrigatorController irrigatorController;
     AbstractWiFiSetupManager* setupManager;
     IrrigatorWebServer irrigatorWebServer;

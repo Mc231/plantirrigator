@@ -12,6 +12,8 @@ void IrrigatorWebServer::begin() {
     webServer.on("/mqtt", HTTP_GET, std::bind(&IrrigatorWebServer::handleGetMQTT, this));
     webServer.on("/mqtt", HTTP_POST, std::bind(&IrrigatorWebServer::handleSetMQTT, this));
     webServer.on("/moisture", HTTP_GET, std::bind(&IrrigatorWebServer::handleGetMoistureLevel, this));
+    webServer.on("/relay", HTTP_GET, std::bind(&IrrigatorWebServer::handleGetRelay, this));
+    webServer.on("/relay", HTTP_POST, std::bind(&IrrigatorWebServer::handleToggleRelay, this));
     webServer.on("/reboot", HTTP_POST, std::bind(&IrrigatorWebServer::handleReboot, this));
     webServer.on("/", HTTP_GET, std::bind(&IrrigatorWebServer::handleRoot, this));
     webServer.on("/restore", HTTP_POST, std::bind(&IrrigatorWebServer::handleRestore, this));
@@ -52,6 +54,17 @@ void IrrigatorWebServer::handleGetMoistureLevel() {
     int level = irrigatorController.getMoistureLevel(10);
     String response = "{\"moisture\":" + String(level) + "}";
     webServer.send(200, "application/json", response); 
+}
+
+void IrrigatorWebServer::handleGetRelay() {
+    bool state = irrigatorController.getRelayState();
+    String response = "{\"relay\":" + String(state) + "}";
+    webServer.send(200, "application/json", response); 
+}
+
+void IrrigatorWebServer::handleToggleRelay() {
+    irrigatorController.toggleRelay();
+    webServer.send(200, "text/plain", "Toggled");
 }
 
 void IrrigatorWebServer::handleSetMQTT() {
