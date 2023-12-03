@@ -10,9 +10,9 @@ PlantIrrigatorApp::PlantIrrigatorApp()
     : wifiConfigManager(fileSystem), 
     mqttConfigManager(fileSystem),
     mqttManager(new MqttManagerImpl(mqttConfigManager)),
-    moistureSensor(new MoistureSensorImpl(3,2)),
+    moistureSensor(new MoistureSensorImpl(12,A0)),
     relaySensor(new RelaySensorImpl(13)),
-    irrigatorController(wifiConfigManager, mqttConfigManager, moistureSensor, relaySensor),
+    irrigatorController(wifiConfigManager, mqttConfigManager, moistureSensor, relaySensor, mqttManager),
     stateNotifier(mqttManager, mqttConfigManager, irrigatorController),
     setupManager(new WiFiSetupManager(wifiConfigManager)), 
     irrigatorWebServer(irrigatorController),
@@ -52,6 +52,6 @@ void PlantIrrigatorApp::setupCompleted() {
     hasMqttConfig = mqttManager->hasConfig();
     if (hasMqttConfig) {
         mqttManager->connect();
-        stateNotifier.notifyByTimeout(5000);
+        stateNotifier.notifyByTimeout(STATE_PUBLISH_DELAY);
     }
 }

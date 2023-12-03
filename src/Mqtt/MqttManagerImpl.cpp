@@ -2,38 +2,32 @@
 #include "MqttManagerImpl.h"
 
 MqttManagerImpl::MqttManagerImpl(MqttConfigManager &mqttConfigManager)
-    : mqttConfigManager(mqttConfigManager), mqttClient(wifiClient), serverSetup(false)
+    : mqttConfigManager(mqttConfigManager), mqttClient(wifiClient), connectAttempts(0)
 { }
 
 void MqttManagerImpl::connect()
 {
-    if (!serverSetup && hasConfig())
+    while (!mqttClient.connected() && connectAttempts <= MAX_RETRY_ATTEMPTS)
     {
-        Serial.println("Setup mqtt server");
+        Serial.println("Attempt to connect to mqtt: ");
+        Serial.print(connectAttempts);
+        Serial.println("");
         auto config = mqttConfigManager.readConfig();
         int port = config.port.toInt();
         mqttClient.setServer(config.server.c_str(), port);
-        serverSetup = true;
-    }
-
-    if (!mqttClient.connected())
-    {
         String clientId = "IrrigatorClient-";
         clientId += String(random(0xffff), HEX);
-        auto config = mqttConfigManager.readConfig();
-        Serial.println(config.username);
-        Serial.println(config.password);
         if (mqttClient.connect(clientId.c_str(), config.username.c_str(), config.password.c_str()))
         {
             Serial.println("Connected to MQTT Broker!");
         }
         else
         {
+            connectAttempts++;
             Serial.print("Failed to connect, rc=");
             Serial.print(mqttClient.state());
             Serial.println(" try again in 5 seconds");
-            delay(5000);
-            connect();
+            delay(RETRY_DELAY);
         }
     }
 }
@@ -56,10 +50,7 @@ void MqttManagerImpl::loop()
 
 void MqttManagerImpl::publish(const char *topic, const char *payload)
 {
-    if (mqttClient.connected())
-    {
-        mqttClient.publish(topic, payload);
-    }
+    mqttClient.publish(topic, payload);
 }
 
 void MqttManagerImpl::setCallback(MQTT_CALLBACK_SIGNATURE)

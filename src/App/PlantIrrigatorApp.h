@@ -22,6 +22,7 @@ public:
     void loop();
 
 private:
+    static constexpr const int STATE_PUBLISH_DELAY = 2;
     LittleFSImpl fileSystem;
     WiFiConfigManager wifiConfigManager;
     MqttConfigManager mqttConfigManager;

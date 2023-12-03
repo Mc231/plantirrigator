@@ -6,15 +6,20 @@ StateNotifier::StateNotifier(MqttManager* mqttManager, MqttConfigManager& mqttCo
     : mqttManager(mqttManager), mqttConfigManager(mqttConfigManager), irrigatorController(irrigatorController) {}
 
 void StateNotifier::notifyStatus() {
-	if (mqttManager->isConnected()) 
-    {
-        auto topic = mqttConfigManager.readConfig().statusTopic.c_str();
-        auto state = irrigatorController.getStatus().c_str();
-        mqttManager->publish(topic, state);
-    }
+  // Get the topic and state as Arduino Strings
+    String topicStr = mqttConfigManager.readConfig().statusTopic;
+    String stateStr = irrigatorController.getStatus();
+
+    // Convert to C strings
+    const char* topic = topicStr.c_str();
+    const char* state = stateStr.c_str();
+    mqttManager->publish(topic, state);
 }
 
 
 void StateNotifier::notifyByTimeout(int timeout) {
-    timer.attach(timeout, [this] () { this->notifyStatus(); });
+    if (mqttManager->isConnected())
+    {
+        timer.attach(timeout, [this] () { this->notifyStatus(); });
+    }
 }

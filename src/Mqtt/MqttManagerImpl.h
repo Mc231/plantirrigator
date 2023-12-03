@@ -18,10 +18,12 @@ public:
     void setCallback(MQTT_CALLBACK_SIGNATURE);
 
 private:
+    static constexpr const int MAX_RETRY_ATTEMPTS = 10;
+    static constexpr const int RETRY_DELAY = 5000;
     MqttConfigManager mqttConfigManager;
     WiFiClient wifiClient;
     PubSubClient mqttClient;
-    bool serverSetup;
+    int connectAttempts;
 };
 
 #endif

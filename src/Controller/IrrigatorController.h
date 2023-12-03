@@ -6,10 +6,11 @@
 #include "Mqtt/MqttConfigManager.h"
 #include "Sensor/MoistureSensor.h"
 #include "Sensor/RelaySensor.h"
+#include "Mqtt/MqttManager.h"
 
 class IrrigatorController {
 public:
-    IrrigatorController(WiFiConfigManager& configManager, MqttConfigManager& mqttConfigManager, MoistureSensor* moistureSensor, RelaySensor* relaySensor);
+    IrrigatorController(WiFiConfigManager& configManager, MqttConfigManager& mqttConfigManager, MoistureSensor* moistureSensor, RelaySensor* relaySensor, MqttManager* mqttManager);
     String getStatus();
     String getSensorsStatus();
     String getWiFiConfig();
@@ -27,6 +28,7 @@ private:
     MqttConfigManager& mqttConfigManager;
     MoistureSensor* moistureSensor;
     RelaySensor* relaySensor;
+    MqttManager* mqttManager;
 };
 
 #endif

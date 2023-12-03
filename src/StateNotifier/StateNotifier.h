@@ -13,6 +13,7 @@ public:
     StateNotifier(MqttManager* mqttManager, MqttConfigManager& mqttConfigManager, IrrigatorController& irrigatorController);
     void notifyStatus();
     void notifyByTimeout(int timeout);
+    void loop();
 
 private:
     Ticker timer;

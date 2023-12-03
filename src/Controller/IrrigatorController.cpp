@@ -1,8 +1,8 @@
 // IrrigatorController.cpp
 #include "IrrigatorController.h"
 
-IrrigatorController::IrrigatorController(WiFiConfigManager& cm, MqttConfigManager& mm, MoistureSensor* moistureSensor, RelaySensor* relaySensor)
-    : wiFiConfigManager(cm), mqttConfigManager(mm), moistureSensor(moistureSensor), relaySensor(relaySensor) {}
+IrrigatorController::IrrigatorController(WiFiConfigManager& cm, MqttConfigManager& mm, MoistureSensor* moistureSensor, RelaySensor* relaySensor, MqttManager* mqttManager)
+    : wiFiConfigManager(cm), mqttConfigManager(mm), moistureSensor(moistureSensor), relaySensor(relaySensor), mqttManager(mqttManager) {}
 
 String IrrigatorController::getStatus() {
     // Fetch Wi-Fi SSID
@@ -14,6 +14,7 @@ String IrrigatorController::getStatus() {
     String mqttURL = mqttConfig.server;
     String mqttPort = mqttConfig.port;
     String mqttStatusTopic = mqttConfig.statusTopic;
+    bool mqttConnected = mqttManager->isConnected();
 
     // Moisture
     int moisture = moistureSensor->getMoistureLevel(10);
@@ -24,13 +25,13 @@ String IrrigatorController::getStatus() {
     // Construct JSON response
     String jsonResponse = "{";
     jsonResponse += "\"ssid\": \"" + wifiSSID + "\",";
-    jsonResponse += "\"mqtt_url\": \"" + mqttURL + "\"";
-    jsonResponse += "\"mqtt_port\": \"" + mqttPort + "\"";
-    jsonResponse += "\"mqtt_status_topic\": \"" + mqttStatusTopic + "\"";
-    jsonResponse += "\"moisture\": \"" + String(moisture) + "\"";
+    jsonResponse += "\"mqtt_url\": \"" + mqttURL + "\",";
+    jsonResponse += "\"mqtt_connection_status\": \"" + String(mqttConnected) + "\",";
+    jsonResponse += "\"mqtt_port\": \"" + mqttPort + "\",";
+    jsonResponse += "\"mqtt_status_topic\": \"" + mqttStatusTopic + "\",";
+    jsonResponse += "\"moisture\": \"" + String(moisture) + "\",";
     jsonResponse += "\"relay\": \"" + String(relay) + "\"";
     jsonResponse += "}";
-
     return jsonResponse;
 }
 
@@ -58,6 +59,7 @@ String IrrigatorController::getMqttConfig() {
             "\", \"port\":\"" + config.port + 
             "\", \"username\":\"" + config.username + 
             "\", \"password\":\"" + config.password +
+            "\", \"is_connected\":\"" + String(mqttManager->isConnected()) +
             "\", \"status_topic\":\"" + config.statusTopic +  "\"}";
 }
 
