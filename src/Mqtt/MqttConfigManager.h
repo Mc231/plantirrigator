@@ -23,6 +23,8 @@ public:
 private:
     static constexpr const char* MQTT_CONFIG_FILE = "/mqtt_config.cfg";
     AbstractFS& fileSystem;
+    bool isConfigCached;
+    Config cachedConfig;
     String trimString(const String& str);
 };
 

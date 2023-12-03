@@ -11,7 +11,7 @@ PlantIrrigatorApp::PlantIrrigatorApp()
     mqttConfigManager(fileSystem),
     mqttManager(new MqttManagerImpl(mqttConfigManager)),
     moistureSensor(new MoistureSensorImpl(3,2)),
-    relaySensor(new RelaySensorImpl(4)),
+    relaySensor(new RelaySensorImpl(13)),
     irrigatorController(wifiConfigManager, mqttConfigManager, moistureSensor, relaySensor),
     stateNotifier(mqttManager, mqttConfigManager, irrigatorController),
     setupManager(new WiFiSetupManager(wifiConfigManager)), 

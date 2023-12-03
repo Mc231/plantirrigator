@@ -9,6 +9,7 @@ void MqttManagerImpl::connect()
 {
     if (!serverSetup && hasConfig())
     {
+        Serial.println("Setup mqtt server");
         auto config = mqttConfigManager.readConfig();
         int port = config.port.toInt();
         mqttClient.setServer(config.server.c_str(), port);
@@ -20,6 +21,8 @@ void MqttManagerImpl::connect()
         String clientId = "IrrigatorClient-";
         clientId += String(random(0xffff), HEX);
         auto config = mqttConfigManager.readConfig();
+        Serial.println(config.username);
+        Serial.println(config.password);
         if (mqttClient.connect(clientId.c_str(), config.username.c_str(), config.password.c_str()))
         {
             Serial.println("Connected to MQTT Broker!");
